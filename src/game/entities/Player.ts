@@ -65,4 +65,16 @@ export class Player{
 
         this.bullets.push(bullet)
     }
+
+    get x() {
+        return this.sprite.x
+    }
+    get y() {
+        return this.sprite.y
+    }
+
+    destroy() {
+        this.sprite.destroy()
+        this.bullets.forEach((bullet) => bullet.destroy())
+    }
 }
