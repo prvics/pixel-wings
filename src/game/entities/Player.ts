@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { Bullet } from "./Bullet";
 
 export class Player{
     scene: Phaser.Scene
@@ -9,6 +10,10 @@ export class Player{
 
     speed = 0.15
 
+    bullets: Bullet[] = []
+    shootCooldown = 200
+    lastShot = 0
+
     constructor(scene: Phaser.Scene, x: number, y: number){
         this.scene = scene
                                                     //! coloring  0x inside code; in css -> # ; R = 38; G = bd; B = f8
@@ -18,6 +23,12 @@ export class Player{
         this.targetY = y
 
         this.setupInput()
+
+        this.scene.time.addEvent({
+            delay: this.shootCooldown,
+            loop: true,
+            callback: () => this.shoot()
+        })
     }
 
     setupInput() {
@@ -33,5 +44,25 @@ export class Player{
 
         this.sprite.x += dx * this.speed
         this.sprite.y += dy * this.speed
+
+        this.bullets.forEach((b) => b.update(delta))
+
+        this.bullets = this.bullets.filter((b) => {
+            if (b.isOffscreen()){
+                b.destroy()
+                return false
+            }
+            return true
+        })
+    }
+
+    shoot(){
+        const bullet = new Bullet(
+            this.scene,
+            this.sprite.x,
+            this.sprite.y - 20
+        )
+
+        this.bullets.push(bullet)
     }
 }
