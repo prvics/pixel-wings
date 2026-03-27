@@ -10,6 +10,10 @@ export class Player{
 
     speed = 0.15
 
+    hp = 3
+    maxHp = 3
+    isDead = false
+
     bullets: Bullet[] = []
     shootCooldown = 200
     lastShot = 0
