@@ -144,24 +144,27 @@ export class GameScene extends Phaser.Scene {
     }
 
     handlePlayerEnemyCollisions() {
-        for (let i = this.enemies.length - 1; i >= 0; i--) {
-            const enemy = this.enemies[i]
+        if (this.isGameOver) return
+        if (!this.player?.sprite?.active) return
 
-            const hit = Phaser.Geom.Intersects.RectangleToRectangle(
+        for (const enemy of this.enemies) {
+            if (!enemy?.sprite?.active) continue
+
+            if (Phaser.Geom.Intersects.RectangleToRectangle(
                 this.player.sprite.getBounds(),
                 enemy.sprite.getBounds()
-            )
-
-            if (hit) {
+            )) {
                 enemy.destroy()
-                this.enemies.splice(i, 1)
 
-                this.player.hp -= 1
-                this.updateHpText()
-                
-                if (this.player.hp <= 0) {
-                    this.player.destroy()
+                const died = this.player.takeHit()
+
+                if(died){
+                    this.isGameOver = true
                     this.triggerGameOver()
+                    this.updateHpText()
+                    return
+                } else {
+                    this.updateHpText()
                 }
             }
         }

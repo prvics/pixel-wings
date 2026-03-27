@@ -70,6 +70,17 @@ export class Player{
         this.bullets.push(bullet)
     }
 
+    takeHit(): boolean {
+        this.hp--
+
+        if (this.hp <= 0) {
+            this.destroy()
+            return true
+        }
+
+        return false
+    }
+
     get x() {
         return this.sprite.x
     }
