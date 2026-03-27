@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import { Bullet } from "./Bullet";
+import { BaseBullet } from "./bullets/BaseBullet";
+import { BulletPresets } from "./bullets/BulletPresets";
 
 export class Player{
     scene: Phaser.Scene
@@ -14,7 +15,7 @@ export class Player{
     maxHp = 3
     isDead = false
 
-    bullets: Bullet[] = []
+    bullets: BaseBullet[] = []
     shootCooldown = 200
     lastShot = 0
 
@@ -61,10 +62,11 @@ export class Player{
     }
 
     shoot(){
-        const bullet = new Bullet(
+        const bullet = new BaseBullet(
             this.scene,
             this.sprite.x,
-            this.sprite.y - 20
+            this.sprite.y - 20,
+            BulletPresets.playerBasic
         )
 
         this.bullets.push(bullet)
